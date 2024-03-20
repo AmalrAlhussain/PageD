@@ -45,7 +45,7 @@ CONTENT_STYLE = {
 
 sidebar = html.Div(
     [
-        html.H2("Sidebar", className="display-4"),
+        html.H2("PDPrognosis", className="display-4"),
         html.Hr(),
         html.P(
             "A simple sidebar layout with navigation links", className="lead"
