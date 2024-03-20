@@ -123,6 +123,7 @@ def show_patient_score(n_clicks):
         index = button_id["index"]
         score = patients[int(index)]["score"]
         return f"Patient {int(index) + 1} score: {score}"
-    
-    if __name__ == "__main__":
+
+
+if __name__ == "__main__":
     app.run_server(debug=True, port=8050)
