@@ -115,7 +115,6 @@ def show_patient_details(pathname):
 
 
 @app.callback(Output({"type": "score-output", "index": "children"}, [Input({"type": "score-button", "index": "n_clicks"})]))
-
 def show_patient_score(n_clicks):
     if n_clicks is None:
         return ""
