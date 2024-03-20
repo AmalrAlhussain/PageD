@@ -68,17 +68,17 @@ sidebar = html.Div(
 content = html.Div(id="page-content", style=CONTENT_STYLE)
 
 patients = [
-    {"name": "Patient 1", "score": 80},
-    {"name": "Patient 2", "score": 75},
-    {"name": "Patient 3", "score": 90},
-    # إضافة بيانات المرضى الأخرى هنا
+    {"name": "Patient 1", "score": 3},
+    {"name": "Patient 2", "score": 4},
+    {"name": "Patient 3", "score": 1},
+    # patients information 
 ]
 
 app.layout = html.Div([
     dcc.Location(id="url"),
     sidebar,
     content,
-    html.Div(id="patient-details")  # تخصيص مكان لعرض تفاصيل المريض
+    html.Div(id="patient-details")  #for display patient details
 ])
 
 
@@ -105,7 +105,7 @@ def show_patient_details(pathname):
     if pathname == "/page-1":
         return html.Div([
             html.H3("Patient Details"),
-            # عرض مربعات المرضى وتفاصيلهم
+            # For the patient details 
             *[html.Div([
                 html.H5(patient["name"]),
                 html.Button(f"Score: {patient['score']}", id={"type": "score-button", "index": index}),
@@ -127,3 +127,4 @@ def show_patient_score(n_clicks):
 
 if __name__ == "__main__":
     app.run_server(port=8050)
+
