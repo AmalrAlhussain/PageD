@@ -15,6 +15,9 @@
 import dash
 import dash_bootstrap_components as dbc
 from dash import Input, Output, dcc, html
+import dash_core_components as dcc
+import dash_html_components as html
+from dash.dependencies import Input, Output
 
 app = dash.Dash(
     title="testdoctor",
@@ -72,7 +75,7 @@ app.layout = html.Div([dcc.Location(id="url"), sidebar, content])
 def render_page_content(pathname):
     if pathname == "/":
         return html.P("This is the content of the home page!")
-    elif pathname == "/page-1":
+    elif pathname == "/patient":
         return html.P("This is the content of page 1. Yay!")
     elif pathname == "/page-2":
         return html.P("Oh cool, this is page 2!")
@@ -88,3 +91,38 @@ def render_page_content(pathname):
 
 if __name__ == "__main__":
     app.run_server(debug=True, port=8050)
+
+    patients = [
+    {"name": "Patient 1", "score": 80},
+    {"name": "Patient 2", "score": 75},
+    {"name": "Patient 3", "score": 90},
+    # إضافة بيانات المرضى الأخرى هنا
+]
+
+app.layout = html.Div([
+    dcc.Location(id="url"),
+    sidebar,
+    html.Div(id="page-content", style=CONTENT_STYLE),
+    html.Div(id="patient-details")  # تخصيص مكان لعرض تفاصيل المريض
+])
+
+# يمكنك تعديل الدالة التالية وفقًا لاحتياجاتك
+@app.callback(Output("patient-details", "children"), [Input("url", "pathname")])
+def show_patient_details(pathname):
+    if pathname == "/page-1":
+        return html.Div([
+            html.H3("Patient Details"),
+            # عرض مربعات المرضى وتفاصيلهم
+            *[html.Div([
+                html.H5(patient["name"]),
+                html.Button(f"Score: {patient['score']}", id={"type": "score-button", "index": index}),
+                html.Div(id={"type": "score-output", "index": index})
+            ]) for index, patient in enumerate(patients)]
+        ])
+
+# يمكنك تعديل الدالة التالية وفقًا لاحتياجاتك
+@app.callback(Output({"type": "score-output", "index": Input({"type": "score-button", "index": Input})}))
+def show_patient_score(button_id):
+    index = button_id["index"]
+    score = patients[index]["score"]
+    return f"Patient {index + 1} score: {score}"
