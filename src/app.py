@@ -119,8 +119,8 @@ def show_patient_score(n_clicks):
     if n_clicks is None:
         return ""
     else:
-        button_id = dash.callback_context.triggered[0]['prop_id'].split('.')[0]
-        index = button_id["index"]
+        button_id = dash.callback_context.triggered[0]['prop_id']
+        index = button_id.split('.')[0]["index"]
         score = patients[int(index)]["score"]
         return f"Patient {int(index) + 1} score: {score}"
 
