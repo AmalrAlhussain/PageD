@@ -16,8 +16,17 @@ import dash
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
+from dash.dependencies import Input, Output
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+
+app.layout = html.Div(
+    children=[
+        dcc.Location(id="url", refresh=False),
+        html.Div(id="page-content")
+    ]
+)
+
 
 
 # Declare server for Heroku deployment. Needed for Procfile.
@@ -78,7 +87,6 @@ app.layout = html.Div([
     html.Div(id="patient-details")  #for display patient details
 ])
 
-
 @app.callback(Output("page-content", "children"), [Input("url", "pathname")])
 def render_page_content(pathname):
     if pathname == "/":
@@ -123,5 +131,5 @@ def show_patient_score(n_clicks):
 
 
 if __name__ == "__main__":
-    app.run_server(port=8050)
+    app.run_server(debug=True)
 
