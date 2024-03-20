@@ -14,7 +14,6 @@
 '''
 import dash
 import dash_bootstrap_components as dbc
-from dash import Input, Output, dcc, html
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
@@ -22,7 +21,7 @@ from dash.dependencies import Input, Output
 app = dash.Dash(
     title="testdoctor",
     external_stylesheets=[dbc.themes.BOOTSTRAP],
-    )
+)
 
 # Declare server for Heroku deployment. Needed for Procfile.
 server = app.server
@@ -68,14 +67,26 @@ sidebar = html.Div(
 
 content = html.Div(id="page-content", style=CONTENT_STYLE)
 
-app.layout = html.Div([dcc.Location(id="url"), sidebar, content])
+patients = [
+    {"name": "Patient 1", "score": 80},
+    {"name": "Patient 2", "score": 75},
+    {"name": "Patient 3", "score": 90},
+    # إضافة بيانات المرضى الأخرى هنا
+]
+
+app.layout = html.Div([
+    dcc.Location(id="url"),
+    sidebar,
+    content,
+    html.Div(id="patient-details")  # تخصيص مكان لعرض تفاصيل المريض
+])
 
 
 @app.callback(Output("page-content", "children"), [Input("url", "pathname")])
 def render_page_content(pathname):
     if pathname == "/":
         return html.P("This is the content of the home page!")
-    elif pathname == "/patient":
+    elif pathname == "/page-1":
         return html.P("This is the content of page 1. Yay!")
     elif pathname == "/page-2":
         return html.P("Oh cool, this is page 2!")
@@ -89,24 +100,6 @@ def render_page_content(pathname):
     )
 
 
-if __name__ == "__main__":
-    app.run_server(debug=True, port=8050)
-
-  patients = [
-    {"name": "Patient 1", "score": 80},
-    {"name": "Patient 2", "score": 75},
-    {"name": "Patient 3", "score": 90},
-    # إضافة بيانات المرضى الأخرى هنا
-]
-
-app.layout = html.Div([
-    dcc.Location(id="url"),
-    sidebar,
-    html.Div(id="page-content", style=CONTENT_STYLE),
-    html.Div(id="patient-details")  # تخصيص مكان لعرض تفاصيل المريض
-])
-
-# يمكنك تعديل الدالة التالية وفقًا لاحتياجاتك
 @app.callback(Output("patient-details", "children"), [Input("url", "pathname")])
 def show_patient_details(pathname):
     if pathname == "/page-1":
@@ -120,8 +113,9 @@ def show_patient_details(pathname):
             ]) for index, patient in enumerate(patients)]
         ])
 
-# يمكنك تعديل الدالة التالية وفقًا لاحتياجاتك
+
 @app.callback(Output({"type": "score-output", "index": "children"}, [Input({"type": "score-button", "index": "n_clicks"})]))
+
 def show_patient_score(n_clicks):
     if n_clicks is None:
         return ""
@@ -130,3 +124,6 @@ def show_patient_score(n_clicks):
         index = button_id["index"]
         score = patients[int(index)]["score"]
         return f"Patient {int(index) + 1} score: {score}"
+    
+    if __name__ == "__main__":
+    app.run_server(debug=True, port=8050)
