@@ -92,7 +92,7 @@ def render_page_content(pathname):
 if __name__ == "__main__":
     app.run_server(debug=True, port=8050)
 
-    patients = [
+  patients = [
     {"name": "Patient 1", "score": 80},
     {"name": "Patient 2", "score": 75},
     {"name": "Patient 3", "score": 90},
@@ -121,8 +121,12 @@ def show_patient_details(pathname):
         ])
 
 # يمكنك تعديل الدالة التالية وفقًا لاحتياجاتك
-@app.callback(Output({"type": "score-output", "index": Input({"type": "score-button", "index": Input})}))
-def show_patient_score(button_id):
-    index = button_id["index"]
-    score = patients[index]["score"]
-    return f"Patient {index + 1} score: {score}"
+@app.callback(Output({"type": "score-output", "index": "children"}, [Input({"type": "score-button", "index": "n_clicks"})]))
+def show_patient_score(n_clicks):
+    if n_clicks is None:
+        return ""
+    else:
+        button_id = dash.callback_context.triggered[0]['prop_id'].split('.')[0]
+        index = button_id["index"]
+        score = patients[int(index)]["score"]
+        return f"Patient {int(index) + 1} score: {score}"
